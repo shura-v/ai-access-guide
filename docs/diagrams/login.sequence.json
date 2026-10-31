@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Вход в аккаунт подписки",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1000,
+      620
+    ],
+    "views": [
+      {
+        "id": "start",
+        "label": "1 · Ссылка",
+        "focus": [
+          "you",
+          "panel"
+        ],
+        "note": "Панель на VPS выдаёт ссылку для входа."
+      },
+      {
+        "id": "provider-login",
+        "label": "2 · Вход",
+        "focus": [
+          "you",
+          "provider"
+        ],
+        "note": "Вход через браузер. При удалённом входе localhost может быть недоступен."
+      },
+      {
+        "id": "callback",
+        "label": "3 · Callback",
+        "focus": [
+          "you",
+          "panel",
+          "provider"
+        ],
+        "note": "Адрес из адресной строки возвращаешь в панель, токены остаются на VPS."
+      }
+    ]
+  },
+  "participants": [
+    {
+      "id": "you",
+      "type": "frontend",
+      "label": "Браузер + VPN",
+      "sublabel": "страна VPS"
+    },
+    {
+      "id": "panel",
+      "type": "backend",
+      "label": "management.html",
+      "sublabel": "VPS через SSH-туннель"
+    },
+    {
+      "id": "provider",
+      "type": "external",
+      "label": "OpenAI · Anthropic",
+      "sublabel": "OAuth"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 255,
+      "label": "Ссылка"
+    },
+    {
+      "from": 270,
+      "to": 350,
+      "label": "Вход"
+    },
+    {
+      "from": 365,
+      "to": 515,
+      "label": "Callback"
+    }
+  ],
+  "messages": [
+    {
+      "id": "start-login",
+      "from": "you",
+      "to": "panel",
+      "y": 195,
+      "label": "OAuth вход → Начать вход",
+      "variant": "emphasis"
+    },
+    {
+      "id": "auth-url",
+      "from": "panel",
+      "to": "you",
+      "y": 230,
+      "label": "URL авторизации",
+      "variant": "return"
+    },
+    {
+      "id": "provider-signin",
+      "from": "you",
+      "to": "provider",
+      "y": 300,
+      "label": "вход в аккаунт",
+      "variant": "security"
+    },
+    {
+      "id": "localhost-redirect",
+      "from": "provider",
+      "to": "you",
+      "y": 335,
+      "label": "localhost:… — возможна ошибка",
+      "variant": "return"
+    },
+    {
+      "id": "paste-callback",
+      "from": "you",
+      "to": "panel",
+      "y": 400,
+      "label": "Callback URL целиком",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exchange-code",
+      "from": "panel",
+      "to": "provider",
+      "y": 435,
+      "label": "код → токены",
+      "variant": "security"
+    },
+    {
+      "id": "tokens",
+      "from": "provider",
+      "to": "panel",
+      "y": 465,
+      "label": "OAuth-токены",
+      "variant": "return"
+    },
+    {
+      "id": "success",
+      "from": "panel",
+      "to": "you",
+      "y": 500,
+      "label": "Аутентификация успешна!",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "panel",
+      "from": 195,
+      "to": 230,
+      "type": "backend"
+    },
+    {
+      "participant": "provider",
+      "from": 300,
+      "to": 335,
+      "type": "external"
+    },
+    {
+      "participant": "panel",
+      "from": 400,
+      "to": 500,
+      "type": "backend"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "orange",
+      "title": "1 · Сеть и вход",
+      "items": [
+        "Панель — через SSH-туннель",
+        "Проверяй условия провайдера",
+        "VPN зависит от сети и условий"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "2 · Повтори для каждой подписки",
+      "items": [
+        "Codex OAuth — для ChatGPT",
+        "Anthropic OAuth — для Claude",
+        "Токены хранятся на VPS, не на компьютере"
+      ]
+    }
+  ]
+}

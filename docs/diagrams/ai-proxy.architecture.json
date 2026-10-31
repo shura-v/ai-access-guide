@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "CLIProxyAPI на VPS: маршрут к сервисам",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1050,
+      450
+    ],
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Клиент"
+        },
+        "security": {
+          "label": "HTTPS"
+        },
+        "backend": {
+          "label": "Прокси"
+        },
+        "external": {
+          "label": "Подписка"
+        },
+        "messagebus": {
+          "label": "Вход в аккаунт"
+        }
+      }
+    },
+    "views": [
+      {
+        "id": "work",
+        "label": "1 · Работа",
+        "focus": [
+          "client",
+          "caddy",
+          "cpa",
+          "chatgpt",
+          "claude"
+        ],
+        "note": "Одна труба: клиент → твой домен → VPS → подписки. Модели меняются, труба остаётся."
+      },
+      {
+        "id": "login",
+        "label": "2 · Вход в аккаунты",
+        "focus": [
+          "browser",
+          "caddy",
+          "cpa",
+          "chatgpt",
+          "claude"
+        ],
+        "note": "Вход в аккаунт через панель; учитывай условия провайдера."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Твой клиент",
+      "sublabel": "Codex, Claude Code или другой",
+      "pos": [
+        40,
+        165
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "browser",
+      "type": "messagebus",
+      "label": "Браузер + VPN",
+      "sublabel": "только вход",
+      "pos": [
+        40,
+        310
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "caddy",
+      "type": "security",
+      "label": "Caddy",
+      "sublabel": "cpa.example.com",
+      "pos": [
+        340,
+        165
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "cpa",
+      "type": "backend",
+      "label": "CLIProxyAPI",
+      "sublabel": "Docker · 127.0.0.1:8317",
+      "pos": [
+        570,
+        165
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "chatgpt",
+      "type": "external",
+      "label": "ChatGPT",
+      "sublabel": "Plus / Pro",
+      "brand": "openai",
+      "pos": [
+        820,
+        95
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "Pro / Max",
+      "brand": "anthropic",
+      "pos": [
+        820,
+        235
+      ],
+      "size": [
+        190,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Твой компьютер · Россия",
+      "wraps": [
+        "client",
+        "browser"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "VPS за рубежом · ставит sitectl",
+      "wraps": [
+        "caddy",
+        "cpa"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "Подписки",
+      "wraps": [
+        "chatgpt",
+        "claude"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "client-caddy",
+      "from": "client",
+      "to": "caddy",
+      "variant": "emphasis",
+      "label": "ключ прокси"
+    },
+    {
+      "id": "caddy-cpa",
+      "from": "caddy",
+      "to": "cpa",
+      "variant": "emphasis",
+      "label": "reverse_proxy"
+    },
+    {
+      "id": "cpa-chatgpt",
+      "from": "cpa",
+      "to": "chatgpt",
+      "label": "OAuth"
+    },
+    {
+      "id": "cpa-claude",
+      "from": "cpa",
+      "to": "claude",
+      "label": "OAuth"
+    },
+    {
+      "id": "browser-caddy",
+      "from": "browser",
+      "to": "cpa",
+      "label": "SSH-туннель",
+      "variant": "dashed",
+      "labelDy": 30
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1 · Зачем",
+      "items": [
+        "Подключение совместимых клиентов и доступных моделей",
+        "Модели меняются — труба остаётся",
+        "Доступность и условия зависят от провайдера"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "2 · Клиент",
+      "items": [
+        "Агент сам прописывает адрес прокси в свой конфиг",
+        "Ключ прокси — только в переменной среды",
+        "Claude Code — без /v1, Codex и другие — с /v1"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "3 · Сборка и вход",
+      "items": [
+        "sitectl + sitectl-extensions: Docker, CLIProxyAPI, Caddy",
+        "Панель управления доступна через SSH",
+        "Сетевые требования зависят от провайдера"
+      ]
+    }
+  ]
+}

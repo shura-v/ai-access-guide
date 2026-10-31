@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Путь запроса к модели",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1000,
+      620
+    ],
+    "views": [
+      {
+        "id": "request",
+        "label": "1 · Запрос",
+        "focus": [
+          "client",
+          "caddy",
+          "cpa",
+          "provider"
+        ],
+        "note": "Клиент знает только твой домен и ключ прокси."
+      },
+      {
+        "id": "subscription",
+        "label": "2 · Подписка",
+        "focus": [
+          "cpa",
+          "provider"
+        ],
+        "note": "К провайдеру ходит только VPS, с OAuth-токеном твоей подписки."
+      }
+    ]
+  },
+  "participants": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Клиент",
+      "sublabel": "Codex · Claude Code"
+    },
+    {
+      "id": "caddy",
+      "type": "security",
+      "label": "Caddy",
+      "sublabel": "HTTPS · твой домен"
+    },
+    {
+      "id": "cpa",
+      "type": "backend",
+      "label": "CLIProxyAPI",
+      "sublabel": "127.0.0.1:8317"
+    },
+    {
+      "id": "provider",
+      "type": "external",
+      "label": "OpenAI · Anthropic",
+      "sublabel": "подписка"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 300,
+      "label": "Россия → VPS"
+    },
+    {
+      "from": 320,
+      "to": 400,
+      "label": "VPS → провайдер"
+    },
+    {
+      "from": 420,
+      "to": 520,
+      "label": "Ответ"
+    }
+  ],
+  "messages": [
+    {
+      "id": "client-request",
+      "from": "client",
+      "to": "caddy",
+      "y": 200,
+      "label": "запрос + ключ прокси",
+      "variant": "emphasis"
+    },
+    {
+      "id": "caddy-forward",
+      "from": "caddy",
+      "to": "cpa",
+      "y": 260,
+      "label": "reverse_proxy",
+      "variant": "default"
+    },
+    {
+      "id": "cpa-provider",
+      "from": "cpa",
+      "to": "provider",
+      "y": 350,
+      "label": "OAuth-токен подписки",
+      "variant": "security"
+    },
+    {
+      "id": "provider-answer",
+      "from": "provider",
+      "to": "cpa",
+      "y": 390,
+      "label": "ответ модели",
+      "variant": "return"
+    },
+    {
+      "id": "cpa-answer",
+      "from": "cpa",
+      "to": "caddy",
+      "y": 450,
+      "label": "ответ",
+      "variant": "return"
+    },
+    {
+      "id": "caddy-answer",
+      "from": "caddy",
+      "to": "client",
+      "y": 500,
+      "label": "ответ",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "caddy",
+      "from": 200,
+      "to": 500,
+      "type": "security"
+    },
+    {
+      "participant": "cpa",
+      "from": 260,
+      "to": 450,
+      "type": "backend"
+    },
+    {
+      "participant": "provider",
+      "from": 350,
+      "to": 390,
+      "type": "external"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1 · Клиент",
+      "items": [
+        "Адрес — твой домен, ключ — клиентский ключ прокси",
+        "Из России идёт только HTTPS до VPS",
+        "Ключей OpenAI и Anthropic на компьютере нет"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2 · VPS",
+      "items": [
+        "CLIProxyAPI подставляет OAuth-токен подписки",
+        "Провайдер видит запрос из страны VPS",
+        "Список моделей клиент получает тоже через прокси"
+      ]
+    }
+  ]
+}
