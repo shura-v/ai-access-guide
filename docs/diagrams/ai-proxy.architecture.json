@@ -6,7 +6,7 @@
     "quality_profile": "showcase",
     "viewBox": [
       1050,
-      450
+      510
     ],
     "legend": {
       "entries": {
@@ -36,9 +36,10 @@
           "caddy",
           "cpa",
           "chatgpt",
-          "claude"
+          "claude",
+          "google"
         ],
-        "note": "Одна труба: клиент → твой домен → VPS → подписки. Модели меняются, труба остаётся."
+        "note": "Одна труба к провайдерам; Google запрещает сторонний доступ к Antigravity."
       },
       {
         "id": "login",
@@ -48,9 +49,10 @@
           "caddy",
           "cpa",
           "chatgpt",
-          "claude"
+          "claude",
+          "google"
         ],
-        "note": "Вход в аккаунт через панель; учитывай условия провайдера."
+        "note": "Вход через панель зависит от провайдера; Google запрещает сторонний доступ к Antigravity."
       }
     ]
   },
@@ -76,7 +78,7 @@
       "sublabel": "только вход",
       "pos": [
         40,
-        310
+        370
       ],
       "size": [
         190,
@@ -119,7 +121,7 @@
       "brand": "openai",
       "pos": [
         820,
-        95
+        75
       ],
       "size": [
         190,
@@ -134,7 +136,21 @@
       "brand": "anthropic",
       "pos": [
         820,
-        235
+        200
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "google",
+      "type": "external",
+      "label": "Google Antigravity",
+      "sublabel": "Pro / Ultra · Claude",
+      "pos": [
+        820,
+        345
       ],
       "size": [
         190,
@@ -166,7 +182,8 @@
       "label": "Подписки",
       "wraps": [
         "chatgpt",
-        "claude"
+        "claude",
+        "google"
       ],
       "pad": 24
     }
@@ -205,6 +222,22 @@
       "label": "SSH-туннель",
       "variant": "dashed",
       "labelDy": 30
+    },
+    {
+      "id": "cpa-google",
+      "from": "cpa",
+      "to": "google",
+      "label": "OAuth · запрещён Google",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          660,
+          377
+        ]
+      ],
+      "labelDy": 20
     }
   ],
   "cards": [
@@ -214,7 +247,8 @@
       "items": [
         "Подключение совместимых клиентов и доступных моделей",
         "Модели меняются — труба остаётся",
-        "Доступность и условия зависят от провайдера"
+        "Доступность и условия зависят от провайдера",
+        "Google запрещает сторонний доступ к Antigravity"
       ]
     },
     {
